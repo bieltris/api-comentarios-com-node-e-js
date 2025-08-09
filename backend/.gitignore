@@ -1,0 +1,7 @@
+# backend/.gitignore
+
+# Dependências do Node.js
+node_modules
+
+# Arquivos de ambiente (se você usar no futuro)
+.env

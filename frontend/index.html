@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstração do CRUD de Comentários</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Meu Player de Vídeo Incrível (Vídeo ID: 1)</h1>
+    <div class="video-placeholder"></div>
+
+    <hr>
+
+    <section class="comments-section">
+        <h2>Comentários</h2>
+
+        <form id="form-novo-comentario">
+            <input type="text" id="input-usuario" placeholder="Seu nome" required>
+            <textarea id="input-texto" placeholder="Adicione um comentário..." required></textarea>
+            <button type="submit">Comentar</button>
+        </form>
+
+        <div id="comments-list-container">
+            <p class="loading-message">Carregando comentários...</p>
+        </div>
+    </section>
+
+
+    <script src="app.js"></script>
+</body>
+</html>
