@@ -3,10 +3,10 @@ const cors = require('cors');
 const path = require('path');
 
 
-const app = express(); 
+const app = express();
 const PORT = 3000;
 app.use(cors());
-app.use(express.json());  
+app.use(express.json());
 app.use(express.static(path.join(__dirname, '../frontend'))); // <<< ADICIONE ESTA LINHA
 
 
@@ -15,9 +15,11 @@ app.use(express.static(path.join(__dirname, '../frontend'))); // <<< ADICIONE ES
 // ===================================================================
 const db = {
     comentarios: [
-        { id: 1, videoId: 1, usuario: "Arakaki", texto: "Muito bom o vídeo, aprendi bastante!", respostas: [
-            { id: 101, usuario: "Gabriel", texto: "Concordo, a parte sobre injeção foi top!" }
-        ]},
+        {
+            id: 1, videoId: 1, usuario: "Arakaki", texto: "Muito bom o vídeo, aprendi bastante!", respostas: [
+                { id: 101, usuario: "Gabriel", texto: "Concordo, a parte sobre injeção foi top!" }
+            ]
+        },
         { id: 2, videoId: 1, usuario: "Martins", texto: "Alguém sabe o nome da ferramenta do minuto 3:45?", respostas: [] },
         { id: 3, videoId: 2, usuario: "Luciano", texto: "Esse vídeo de câmbio salvou meu dia!", respostas: [] }
     ]
@@ -32,8 +34,8 @@ const db = {
 app.get('/comentarios', (req, res) => {
     // 'req' (request) contém as informações do pedido, exemplo parâmetros da URL.
     // 'res' (response) é para enviar a resposta de volta.
-    
-    const videoId = req.query.videoId; 
+
+    const videoId = req.query.videoId;
 
     if (!videoId) {
         return res.status(400).json({ error: "O parâmetro videoId é obrigatório." });
@@ -49,8 +51,8 @@ app.get('/comentarios', (req, res) => {
 // POST /comentarios
 app.post('/comentarios', (req, res) => {
     // `express.json()` é um "middleware" que ensina o Express a ler o JSON.
-    
-    const { videoId, usuario, texto } = req.body; 
+
+    const { videoId, usuario, texto } = req.body;
 
     if (!videoId || !usuario || !texto) {
         return res.status(400).json({ error: "Os campos videoId, usuario e texto são obrigatórios." });
@@ -68,6 +70,10 @@ app.post('/comentarios', (req, res) => {
 
     res.status(201).json(novoComentario);
 });
+
+app.get('/main', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+})
 
 
 app.listen(PORT, () => {

@@ -1,4 +1,26 @@
+
+import {setupDivEditables, divEditables} from './comment.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    document.addEventListener('click', (event) => {
+
+    });
+    document.addEventListener('focusin', (event) => {
+        const target = event.target;
+
+        if (target.closest('div[contenteditable="true"]')){
+            target.textContent = target.textContent.trim() === target.dataset.placeholder ? '' : target.textContent;
+        }
+    });
+    document.addEventListener('focusout', (event) => {
+        const target = event.target;
+
+        if (target.closest('div[contenteditable="true"]')) {
+            target.textContent = target.textContent.trim() === '' ? target.dataset.placeholder : target.textContent;
+        }
+    });
+    setupDivEditables();
 
     const commentsContainer = document.getElementById('comments-list-container');
     const videoId = 1;
@@ -44,8 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
 
+        const divEditable = form.querySelector('div[contenteditable="true"]');
         const usuarioInput = document.getElementById('input-usuario');
-        const textoInput = document.getElementById('input-texto');
+        const textoInput = document.getElementById('input-comentario');
         
         const novoComentario = {
             videoId: videoId,
@@ -63,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             console.log('Comentário salvo:', data);
-            usuarioInput.value = '';
             textoInput.value = '';
+            divEditable.textContent = divEditable.dataset.placeholder;
             carregarComentarios();
         })
         .catch(error => console.error('Erro ao salvar comentário:', error));
