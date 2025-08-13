@@ -1,5 +1,5 @@
 
-import * as commentService from '../services/commentService.js';
+import { findCommentsByVideo, buildComment } from '../services/commentService.js';
 
 export function listComments(req, res) {
     const videoId = req.query.videoId;
@@ -8,7 +8,7 @@ export function listComments(req, res) {
         return res.status(400).json({ error: "Erro, video id indefinido;" });
     }
 
-    const commentsForVideo = commentService.findCommentsByVideo(videoId);
+    const commentsForVideo = findCommentsByVideo(videoId);
 
     res.json(commentsForVideo);
 }
@@ -20,7 +20,7 @@ export function createComment(req, res) {
         return res.status(400).json({ error: "Preencha todos os campos, nome e comentario." });
     }
 
-    const newComment = commentService.createComment({ videoId, user, text });
+    const newComment = buildComment({ videoId, user, text });
 
     res.status(201).json(newComment);
 }

@@ -1,7 +1,7 @@
 
 
 const db = {
-    comentarios: [
+    comments: [
         {
             id: 1, videoId: 1, usuario: "Arakaki", texto: "Muito bom o vídeo, aprendi bastante!", respostas: [
                 { id: 101, usuario: "Gabriel", texto: "Concordo, a parte sobre injeção foi top!" }
@@ -13,24 +13,20 @@ const db = {
 };
 
 
-function findCommentsByVideo(videoId) {
+export function findCommentsByVideo(videoId) {
     return db.comments.filter(c => c.videoId == videoId);
 }
 
-function createComment(commentData) {
+export function buildComment(commentData) {
     console.log(`Service: Creating new comment.`);
     const newComment = {
         id: Date.now(), 
         videoId: parseInt(commentData.videoId),
-        user: commentData.user,
-        text: commentData.text,
-        replies: []
+        usuario: commentData.user,
+        texto: commentData.text,
+        respostas: []
     };
     db.comments.push(newComment);
     return newComment;
 }
 
-export default {
-    findCommentsByVideo,
-    createComment
-};
