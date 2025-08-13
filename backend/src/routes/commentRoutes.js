@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router(); // Get the Express router
 
 // 1. Importando o controller.
-import { listComments, createComment } from '../controllers/commentController.js';
+import { listComments, createComment } from '../controller/commentController.js';
 
 // 2. Definindo as rotas e suas ações(funções).
 router.get('/comments', listComments);
