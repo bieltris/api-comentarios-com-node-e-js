@@ -43,12 +43,11 @@ export function carregarComentarios(videoId) {
             }
 
             comentarios.forEach(comentario => {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment';
 
-                commentElement.innerHTML = `
-                        <p><strong>${comentario.usuario}:</strong> ${comentario.texto}</p>
-                    `;
+                const commentElement = criarComentarioElementHtml(comentario);
+                const form = criarFormularioReposta();
+
+                commentElement.appendChild(form);
                 commentsContainer.appendChild(commentElement);
             });
         })
@@ -58,13 +57,84 @@ export function carregarComentarios(videoId) {
         });
 }
 
+function criarComentarioElementHtml(comentario) {
+    const commentElement = document.createElement('div');
+    commentElement.className = 'comment';
+    const head = document.createElement('header');
+    head.className = 'name';
+    head.textContent = comentario.usuario;
+    commentElement.appendChild(head);
+    const divText = document.createElement('div');
+    divText.className = 'comment-text';
+    divText.textContent = comentario.texto;
+    commentElement.appendChild(divText);
+    return commentElement;
+}
+
+function criarFormularioReposta() {
+    const form = document.createElement('form');
+    form.className = 'reply-form';
+
+    const div = document.createElement('div');
+    div.className = 'comment-replies';
+
+    const divEditable = criarDivEditable();
+    div.appendChild(divEditable);
+
+    const replyActions = document.createElement('div');
+    replyActions.className = 'reply-actions';
+    div.appendChild(replyActions);
+
+    const btnConfirm = criarBotaoResponder();
+    const btnCancel = criarBotaoCancelarResposta();
+
+    replyActions.appendChild(btnConfirm);
+    replyActions.appendChild(btnCancel);
+    form.appendChild(div);
+
+    return form;
+}
+
+function criarDivEditable() {
+    const divEditable = document.createElement('div');
+    divEditable.setAttribute('contenteditable', 'true');
+    divEditable.setAttribute('data-placeholder', 'Responda aqui...');
+    divEditable.className = 'reply-input';
+    divEditable.textContent = divEditable.dataset.placeholder;
+    return divEditable;
+}
+
+function criarBotaoResponder() {
+    const btnConfirm = document.createElement('button');
+    btnConfirm.type = 'submit';
+    btnConfirm.className = 'btn-reply';
+    btnConfirm.textContent = 'Responder';
+    return btnConfirm;
+}
+
+function criarBotaoCancelarResposta() {
+    const btnCancel = document.createElement('button');
+    btnCancel.type = 'button';
+    btnCancel.className = 'btn-cancel';
+    btnCancel.textContent = 'Cancelar';
+    btnCancel.addEventListener('click', () => {
+        divEditable.textContent = divEditable.dataset.ploaceholder;
+        divEditable.style.color = '';
+        divEditable.blur();
+        const form = div.closest('form');
+        form.style.diplay = 'none';
+    })
+    return btnCancel;
+}
+
+
 export function enviarComentario(event, videoId) {
     event.preventDefault();
 
     const form = event.target;
     const divEditable = form.querySelector('div[contenteditable="true"]');
     const usuarioInput = form.querySelector('#input-usuario');
-    const textoHiddenInput = form.querySelector('#input-comentario'); 
+    const textoHiddenInput = form.querySelector('#input-comentario');
 
     if (divEditable.textContent.trim() === divEditable.dataset.placeholder) {
         textoHiddenInput.value = '';
@@ -75,7 +145,7 @@ export function enviarComentario(event, videoId) {
     const novoComentario = {
         videoId: videoId,
         user: usuarioInput.value,
-        text: textoHiddenInput.value 
+        text: textoHiddenInput.value
     };
 
     if (!novoComentario.user.trim() || !novoComentario.text.trim()) {
@@ -88,39 +158,38 @@ export function enviarComentario(event, videoId) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(novoComentario),
     })
-    .then(async response => {
-        if (!response.ok) {
-            if (response.status === 400) {
-                const err = await response.json();
-                throw new Error(err.error);
+        .then(async response => {
+            if (!response.ok) {
+                if (response.status === 400) {
+                    const err = await response.json();
+                    throw new Error(err.error);
+                }
             }
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Comentário salvo:', data);
-        
-        usuarioInput.value = '';
-        textoHiddenInput.value = '';
-        divEditable.textContent = divEditable.dataset.placeholder; 
-        divEditable.style.color = ''; 
-        
-        carregarComentarios(videoId);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Comentário salvo:', data);
 
-        const errorSpan = form.querySelector('#error');
-        if (errorSpan) {
-            errorSpan.remove();
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao salvar comentário:', error);
-        
-        const oldErrorSpan = form.querySelector('#error');
-        if (oldErrorSpan) {
-            oldErrorSpan.remove();
-        }
+            textoHiddenInput.value = '';
+            divEditable.textContent = divEditable.dataset.placeholder;
+            divEditable.style.color = '';
 
-        const newErrorSpan = criarSpanErro(error.message);
-        form.appendChild(newErrorSpan);
-    });
+            carregarComentarios(videoId);
+
+            const errorSpan = form.querySelector('#error');
+            if (errorSpan) {
+                errorSpan.remove();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao salvar comentário:', error);
+
+            const oldErrorSpan = form.querySelector('#error');
+            if (oldErrorSpan) {
+                oldErrorSpan.remove();
+            }
+
+            const newErrorSpan = criarSpanErro(error.message);
+            form.appendChild(newErrorSpan);
+        });
 }

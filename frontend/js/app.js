@@ -1,6 +1,8 @@
 
 import { setupDivEditables, carregarComentarios, enviarComentario } from './comment.js';
 
+export let videoId = 1;
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const path = 'http://localhost:3000/api'
@@ -24,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     setupDivEditables();
     
-    let videoId = 1;
     
     const form = document.getElementById('form-novo-comentario');
     form.addEventListener('submit', (event) => enviarComentario(event, videoId));
