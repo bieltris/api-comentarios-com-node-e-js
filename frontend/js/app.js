@@ -1,5 +1,5 @@
 
-import { setupDivEditables, carregarComentarios, enviarComentario } from './comment.js';
+import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm } from './comment.js';
 
 export let videoId = 1;
 
@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = 'http://localhost:3000/api'
 
     document.addEventListener('click', (event) => {
+        const target = event.target;
 
+        if (target.closest('button.btn-reply-comment')) {
+            toggleReplyForm(target);
+        }
     });
     document.addEventListener('focusin', (event) => {
         const target = event.target;

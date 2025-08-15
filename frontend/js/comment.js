@@ -1,7 +1,9 @@
 import { criarSpanErro } from './errorHandle.js';
+import * as commentBuild from './commentBuild.js';
 
 const path = 'http://localhost:3000/api';
 const commentsContainer = document.getElementById('comments-list-container');
+export const pathImg = '../images';
 
 export function setupDivEditables() {
     const divEditables = document.querySelectorAll('div[contenteditable="true"]');
@@ -16,7 +18,6 @@ export function setupDivEditables() {
     divEditables.forEach(div => {
         div.addEventListener('input', (e) => {
             resizeDivEditable(e.target);
-            sincronizarInputHidden(e.target);
         })
         resizeDivEditable(div);
         div.textContent = div.textContent.trim() === '' ? div.dataset.placeholder : div.textContent;
@@ -60,71 +61,60 @@ export function carregarComentarios(videoId) {
 function criarComentarioElementHtml(comentario) {
     const commentElement = document.createElement('div');
     commentElement.className = 'comment';
+
     const head = document.createElement('header');
-    head.className = 'name';
-    head.textContent = comentario.usuario;
+
+    const divName = commentBuild.nomeUsuarioComentario(comentario);
+    head.appendChild(divName);
+
+    const divOptions = document.createElement('div');
+    divOptions.className = 'comment-options';
+
+    const imgEdit = commentBuild.criarOpcaoEditar();
+    divOptions.appendChild(imgEdit);
+
+    const imgDelete = commentBuild.criarOpcaoDeletar();
+    divOptions.appendChild(imgDelete);
+
+    head.appendChild(divOptions);
     commentElement.appendChild(head);
+
     const divText = document.createElement('div');
     divText.className = 'comment-text';
     divText.textContent = comentario.texto;
     commentElement.appendChild(divText);
+
+    const footer = commentBuild.criarFooterComentario();
+    commentElement.appendChild(footer);
+
     return commentElement;
 }
+
+
 
 function criarFormularioReposta() {
     const form = document.createElement('form');
     form.className = 'reply-form';
+    form.style.display = 'none';
 
     const div = document.createElement('div');
     div.className = 'comment-replies';
 
-    const divEditable = criarDivEditable();
+    const divEditable = commentBuild.criarDivEditable();
     div.appendChild(divEditable);
 
     const replyActions = document.createElement('div');
     replyActions.className = 'reply-actions';
     div.appendChild(replyActions);
 
-    const btnConfirm = criarBotaoResponder();
-    const btnCancel = criarBotaoCancelarResposta();
+    const btnConfirm = commentBuild.criarBotaoResponder();
+    const btnCancel = commentBuild.criarBotaoCancelarResposta();
 
     replyActions.appendChild(btnConfirm);
     replyActions.appendChild(btnCancel);
     form.appendChild(div);
 
     return form;
-}
-
-function criarDivEditable() {
-    const divEditable = document.createElement('div');
-    divEditable.setAttribute('contenteditable', 'true');
-    divEditable.setAttribute('data-placeholder', 'Responda aqui...');
-    divEditable.className = 'reply-input';
-    divEditable.textContent = divEditable.dataset.placeholder;
-    return divEditable;
-}
-
-function criarBotaoResponder() {
-    const btnConfirm = document.createElement('button');
-    btnConfirm.type = 'submit';
-    btnConfirm.className = 'btn-reply';
-    btnConfirm.textContent = 'Responder';
-    return btnConfirm;
-}
-
-function criarBotaoCancelarResposta() {
-    const btnCancel = document.createElement('button');
-    btnCancel.type = 'button';
-    btnCancel.className = 'btn-cancel';
-    btnCancel.textContent = 'Cancelar';
-    btnCancel.addEventListener('click', () => {
-        divEditable.textContent = divEditable.dataset.ploaceholder;
-        divEditable.style.color = '';
-        divEditable.blur();
-        const form = div.closest('form');
-        form.style.diplay = 'none';
-    })
-    return btnCancel;
 }
 
 
@@ -192,4 +182,24 @@ export function enviarComentario(event, videoId) {
             const newErrorSpan = criarSpanErro(error.message);
             form.appendChild(newErrorSpan);
         });
+}
+
+export function toggleReplyForm(button) {
+    const form = button.closest('.comment').querySelector('form');
+    const comment = button.closest('.comment');
+
+    const isVisible = form.style.display === 'block';
+    form.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) {
+        const divEditable = form.querySelector('div[contenteditable="true"]');
+        divEditable.textContent = divEditable.dataset.placeholder;
+        divEditable.style.color = '';
+        divEditable.focus();
+        const footer = button.closest('footer');
+        footer.style.display = 'none';
+    } else {
+        const footer = comment.querySelector('footer');
+        footer.style.display = 'block';
+    }
+
 }
