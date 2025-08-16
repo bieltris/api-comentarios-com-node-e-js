@@ -64,3 +64,34 @@ export function criarBotaoCancelarResposta() {
     })
     return btnCancel;
 }
+
+export function criarDivOptions() {
+    const div = document.createElement('div');
+    div.className = 'edit-options';
+    div.style.display = 'none';
+
+    const btnEdit = criarBotaoConfirmarEdit();
+    div.appendChild(btnEdit);
+
+    const btnCancel = document.createElement('button');
+    btnCancel.className = 'btn-cancel-confirm';
+    btnCancel.type = 'button';
+    btnCancel.textContent = 'Cancelar';
+    div.appendChild(btnCancel);
+    return div;
+}
+
+function criarBotaoConfirmarEdit() {
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'btn-edit-confirm';
+    btnEdit.type = 'button';
+    
+    const img = document.createElement("img");
+    img.src = `${pathImg}/re-edit.png`;
+    btnEdit.appendChild(img);
+
+    const span = document.createElement("span");
+    span.textContent = 'Editar';
+    btnEdit.appendChild(span);
+    return btnEdit;
+}
