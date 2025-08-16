@@ -48,14 +48,14 @@ img {
     width: 39%;
 }
 
-.form-control {    
+.form-control {
     background: #d5eafcc7;
     border: 1px solid #a9d8ff94;
 }
 
 .form-control:focus {
     border: 1px solid #000000bd;
-    box-shadow: none;    
+    box-shadow: none;
     background: #d5eafcc7;
     border: 1px solid #a9d8ff94;
 }
@@ -94,6 +94,15 @@ div.form-control {
     --bs-alert-padding-x: 0.5rem;
     --bs-alert-padding-y: 0.5rem;
     --bs-alert-margin-bottom: 0rem;
+}
+
+div[contenteditable='true']:not(#input-texto) {
+    outline: none;
+    border-bottom: 2px solid #0011ff;
+    background: #cffdff;
+    padding: 3px;
+    border-radius: 0px;
+
 }
 
 .comments-list-container {
@@ -138,7 +147,7 @@ div.form-control {
 .comment-text {
     font-size: 16px;
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .reply-form {
@@ -213,6 +222,33 @@ div.form-control {
 .btn-reply-comment:hover {
     text-decoration: underline;
     color: #003bfe;
+}
+
+.edit-options {
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-edit-confirm {
+    border-radius: 5px;
+    background: #0055c4;
+    border:#0011ff;
+    padding: 5px;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    gap: 3px;
+    outline: none;
+}
+
+.btn-cancel-confirm {
+    border-radius: 5px;
+    background: #cffdff;
+    border:#5df4ff;
+    color: #222;
+    padding: 5px;
+    font-size: 14px;
+    outline: none;
 }
 
 
