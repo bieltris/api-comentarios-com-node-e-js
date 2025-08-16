@@ -1,4 +1,4 @@
-import { criarSpanErro } from './errorHandle.js';
+import { criarSpanErro, fraseDeErroVermelha } from './errorHandle.js';
 import * as commentBuild from './commentBuild.js';
 
 const path = 'http://localhost:3000/api';
@@ -47,7 +47,9 @@ export function carregarComentarios(videoId) {
 
                 const commentElement = criarComentarioElementHtml(comentario);
                 const form = criarFormularioReposta();
+                const editOptions = commentBuild.criarDivOptions();
 
+                commentElement.appendChild(editOptions);
                 commentElement.appendChild(form);
                 commentsContainer.appendChild(commentElement);
             });
@@ -61,6 +63,7 @@ export function carregarComentarios(videoId) {
 function criarComentarioElementHtml(comentario) {
     const commentElement = document.createElement('div');
     commentElement.className = 'comment';
+    commentElement.dataset.commentId = comentario.id;
 
     const head = document.createElement('header');
 
@@ -82,6 +85,7 @@ function criarComentarioElementHtml(comentario) {
     const divText = document.createElement('div');
     divText.className = 'comment-text';
     divText.textContent = comentario.texto;
+    divText.setAttribute('contenteditable', 'false');
     commentElement.appendChild(divText);
 
     const footer = commentBuild.criarFooterComentario();
@@ -116,6 +120,7 @@ function criarFormularioReposta() {
 
     return form;
 }
+
 
 
 export function enviarComentario(event, videoId) {
@@ -187,8 +192,15 @@ export function enviarComentario(event, videoId) {
 export function toggleReplyForm(button) {
     const form = button.closest('.comment').querySelector('form');
     const comment = button.closest('.comment');
+    const AllForms = document.querySelectorAll(".reply-form");
 
     const isVisible = form.style.display === 'block';
+
+    AllForms.forEach(form => {
+        form.style.display = 'none';
+        form.closest('.comment').querySelector("footer").style.display = 'block'
+    });
+
     form.style.display = isVisible ? 'none' : 'block';
     if (!isVisible) {
         const divEditable = form.querySelector('div[contenteditable="true"]');
@@ -201,5 +213,66 @@ export function toggleReplyForm(button) {
         const footer = comment.querySelector('footer');
         footer.style.display = 'block';
     }
+
+}
+
+
+export function editComment(button) {
+    const comment = button.closest(".comment");
+    const id = comment.dataset.commentId;
+    const divEditable = comment.querySelector("div[contenteditable='true']");
+    const usuario = document.querySelector('#input-usuario');
+
+    const novoTexto = {
+        commentId: id,
+        texto: divEditable.textContent,
+        usuario: usuario.value
+    }
+
+    console.log(novoTexto);
+
+    fetch(`${path}/editComment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(novoTexto),
+    })
+        .then(async response => {
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(`${err.error}`);
+            }
+            return response;
+        })
+        .then(response => {
+            toggleEditDiv(comment);
+            const erro = comment.querySelector("#error");
+            if (erro) erro.remove();
+        })
+        .catch((err) => {
+            const erro = comment.querySelector("#error");
+            if (erro) erro.remove();
+
+            const span = fraseDeErroVermelha(err);
+            comment.appendChild(span);
+        })
+}
+
+export function toggleEditDiv(target) {
+    const comentario = target.closest(".comment");
+    const divEditable = comentario.querySelector("div[contenteditable]");
+    const editOption = comentario.querySelector(".edit-options");
+    const AllEditOption = document.querySelectorAll('.edit-options');
+    const footer = comentario.querySelector('footer');
+
+    const isVisible = editOption.style.display === 'flex';
+
+    AllEditOption.forEach(edit => {
+        edit.style.display = 'none';
+    })
+
+    editOption.style.display = isVisible ? 'none' : 'flex';
+    footer.style.display = !isVisible ? 'none' : 'block';
+    divEditable.setAttribute("contenteditable", isVisible ? "false" : "true");
+
 
 }

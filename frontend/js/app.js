@@ -1,5 +1,5 @@
 
-import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm } from './comment.js';
+import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm, toggleEditDiv, editComment } from './comment.js';
 
 export let videoId = 1;
 
@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target.closest('button.btn-reply-comment')) {
             toggleReplyForm(target);
+        }
+
+        if(target.closest(".edit-comment") || target.closest('.btn-cancel-confirm')) {
+            toggleEditDiv(target);
+        }
+
+        if(target.closest('.btn-edit-confirm')) {
+            editComment(target);
         }
     });
     document.addEventListener('focusin', (event) => {
