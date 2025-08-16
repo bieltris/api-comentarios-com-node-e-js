@@ -1,5 +1,5 @@
 
-import { findCommentsByVideo, buildComment } from '../services/commentService.js';
+import { findCommentsByVideo, buildComment, editCommentInDb } from '../services/commentService.js';
 
 export function listComments(req, res) {
     const videoId = req.query.videoId;
@@ -23,4 +23,21 @@ export function createComment(req, res) {
     const newComment = buildComment({ videoId, user, text });
 
     res.status(201).json(newComment);
+}
+
+export function editComment(req, res) {
+    const { commentId, texto, usuario } = req.body;
+
+    if (!usuario) {
+        return res.status(401).json({ error: "Preencha seu Nome!" });
+    } else if (!texto) {
+        return res.status(401).json({ error: "Apague o comentario!" });
+    }
+
+    const editou = editCommentInDb({ commentId, texto, usuario });
+
+    if(!editou.success) {
+        return res.status(401).json({ error: editou.error });
+    }
+    return res.status(201).json(editou);
 }

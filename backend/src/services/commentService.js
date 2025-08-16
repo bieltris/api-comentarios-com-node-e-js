@@ -20,7 +20,7 @@ export function findCommentsByVideo(videoId) {
 export function buildComment(commentData) {
     console.log(`Service: Creating new comment.`);
     const newComment = {
-        id: Date.now(), 
+        id: Date.now(),
         videoId: parseInt(commentData.videoId),
         usuario: commentData.user,
         texto: commentData.text,
@@ -30,3 +30,22 @@ export function buildComment(commentData) {
     return newComment;
 }
 
+
+export function editCommentInDb(dataComentario) {
+    const comentario = db.comments.find(com => com.id == dataComentario.commentId);
+
+
+    if (!comentario) {
+        return { success: false, error: "Comentário não encontrado." };
+    }
+    
+    if (dataComentario.usuario !== comentario.usuario) {
+        return { success: false, error: "Você não tem permissão para editar este comentário." };
+    }
+
+    comentario.texto = dataComentario.texto;
+
+    console.log("Comentário atualizado no 'DB':", comentario);
+
+    return { success: true, data: comentario };
+}
