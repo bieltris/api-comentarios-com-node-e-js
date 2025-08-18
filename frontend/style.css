@@ -75,13 +75,15 @@ div.form-control {
 
 .btn-submit {
     border: 1px solid #0055c4;
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: #008cff52;
     color: white;
     font-weight: bold;
     transition: all 0.3s ease-in-out;
     padding: 5px;
     outline: none;
+    display: flex;
+    align-items: center;
 }
 
 .btn-submit:hover {

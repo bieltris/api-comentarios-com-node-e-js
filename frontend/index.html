@@ -24,14 +24,16 @@
                 <span class="input-group-text"><img src="images/user.png"></span>
                 <input type="text" id="input-usuario" class="form-control" placeholder="Nome" required>
             </div>
-            <div class="input-group">
-                <span class="input-group-text"><img src="images/comment.png" alt=""></span>
-                <div contenteditable="true" id="input-texto" class="div-editable form-control"
-                    data-placeholder="Adicione um comentário..."></div>
+            <div style="display: flex; gap: 5px;">
+                <div class="input-group">
+                    <span class="input-group-text" style="padding: 0px 7px"><img src="images/plus.png" alt="" style="width: 30px; height: 30px;"></span>
+                    <div contenteditable="true" id="input-texto" class="div-editable form-control"
+                        data-placeholder="Adicione um comentário..."></div>
+                </div>
+                <button type="submit" class="btn-submit"><img src="images/comentar.png" alt="Comentar"></button>
             </div>
 
             <input type="hidden" id="input-comentario" value="">
-            <button type="submit" class="btn-submit">Comentar</button>
         </form>
 
         <div id="comments-list-container" class="comments-list-container">
