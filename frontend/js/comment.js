@@ -61,6 +61,7 @@ export function carregarComentarios(videoId) {
 }
 
 function criarComentarioElementHtml(comentario) {
+    const usuarioNome = document.getElementById('input-usuario');
     const commentElement = document.createElement('div');
     commentElement.className = 'comment';
     commentElement.dataset.commentId = comentario.id;
@@ -73,11 +74,12 @@ function criarComentarioElementHtml(comentario) {
     const divOptions = document.createElement('div');
     divOptions.className = 'comment-options';
 
-    const imgEdit = commentBuild.criarOpcaoEditar();
-    divOptions.appendChild(imgEdit);
-
-    const imgDelete = commentBuild.criarOpcaoDeletar();
-    divOptions.appendChild(imgDelete);
+    if (usuarioNome.value == comentario.usuario) {
+        const imgEdit = commentBuild.criarOpcaoEditar();
+        divOptions.appendChild(imgEdit);
+        const imgDelete = commentBuild.criarOpcaoDeletar();
+        divOptions.appendChild(imgDelete);
+    }
 
     head.appendChild(divOptions);
     commentElement.appendChild(head);
@@ -128,7 +130,7 @@ export function enviarComentario(event, videoId) {
 
     const form = event.target;
     const divEditable = form.querySelector('div[contenteditable="true"]');
-    const usuarioInput = form.querySelector('#input-usuario');
+    const usuarioInput = document.querySelector('#input-usuario');
     const textoHiddenInput = form.querySelector('#input-comentario');
 
     if (divEditable.textContent.trim() === divEditable.dataset.placeholder) {

@@ -5,6 +5,16 @@ export let videoId = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const overlayInicial = document.querySelector('.overlay-inicial');
+
+    overlayInicial.addEventListener('click', function logarNomeUsuario() {
+        const inputNome = overlayInicial.querySelector('#input-usuario');
+        if (!inputNome.value) return;
+        overlayInicial.style.display = 'none';
+        carregarComentarios(1);
+        removeEventListener('click', logarNomeUsuario);
+    })
+
     const path = 'http://localhost:3000/api'
 
     document.addEventListener('click', (event) => {
@@ -14,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleReplyForm(target);
         }
 
-        if(target.closest(".edit-comment") || target.closest('.btn-cancel-confirm')) {
+        if (target.closest(".edit-comment") || target.closest('.btn-cancel-confirm')) {
             toggleEditDiv(target);
         }
 
-        if(target.closest('.btn-edit-confirm')) {
+        if (target.closest('.btn-edit-confirm')) {
             editComment(target);
         }
     });
@@ -37,8 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     setupDivEditables();
-    
-    
+
+
     const form = document.getElementById('form-novo-comentario');
     form.addEventListener('submit', (event) => enviarComentario(event, videoId));
     carregarComentarios(videoId);

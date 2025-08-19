@@ -11,6 +11,16 @@
 
 <body>
 
+    <div class="overlay-inicial">
+        <h3 style="text-shadow: 0px 0px 14px black;">Escreva seu nome:</h3>
+        <div class="input-group">
+            <span class="input-group-text"><img src="images/user.png"></span>
+            <input type="text" id="input-usuario" class="form-control" placeholder="Nome" required>
+            <button type="button" class="btn-submit" style="padding: 0 7px;"><img src="images/login.png" alt="Logar"></button>
+        </div>
+
+    </div>
+
     <h1>Meu Player de Vídeo (Vídeo ID: 1)</h1>
     <div class="video-placeholder"></div>
 
@@ -20,16 +30,12 @@
         <h2>Comentários</h2>
 
         <form id="form-novo-comentario" class="comment-form">
-            <div class="input-group">
-                <span class="input-group-text"><img src="images/user.png"></span>
-                <input type="text" id="input-usuario" class="form-control" placeholder="Nome" required>
-            </div>
             <div style="display: flex; gap: 5px;">
-                <div class="input-group">
-                    <span class="input-group-text" style="padding: 0px 7px"><img src="images/plus.png" alt="" style="width: 30px; height: 30px;"></span>
-                    <div contenteditable="true" id="input-texto" class="div-editable form-control"
-                        data-placeholder="Adicione um comentário..."></div>
-                </div>
+                <button type="button" class="btn-submit" style="padding: 0 7px; background: #a9d8ff94;">
+                    <img src="images/plus.png" alt="Comentar" style="width: 30px; height: 30px;">
+                </button>
+                <div contenteditable="true" id="input-texto" class="div-editable form-control"
+                    data-placeholder="Adicione um comentário..." style-="flex-grow: 1;"></div>
                 <button type="submit" class="btn-submit"><img src="images/comentar.png" alt="Comentar"></button>
             </div>
 
