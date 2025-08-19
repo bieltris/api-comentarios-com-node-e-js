@@ -259,22 +259,26 @@ export function editComment(button) {
         })
 }
 
+let ultimoEditBtnClicked = null;
 export function toggleEditDiv(target) {
     const comentario = target.closest(".comment");
     const divEditable = comentario.querySelector("div[contenteditable]");
     const editOption = comentario.querySelector(".edit-options");
-    const AllEditOption = document.querySelectorAll('.edit-options');
     const footer = comentario.querySelector('footer');
 
     const isVisible = editOption.style.display === 'flex';
 
-    AllEditOption.forEach(edit => {
-        edit.style.display = 'none';
-    })
-
     editOption.style.display = isVisible ? 'none' : 'flex';
     footer.style.display = !isVisible ? 'none' : 'block';
     divEditable.setAttribute("contenteditable", isVisible ? "false" : "true");
-
-
+    if (ultimoEditBtnClicked) {
+        const comentario = ultimoEditBtnClicked.closest(".comment");
+        const divEditable = comentario.querySelector("div[contenteditable]");
+        const editOption = comentario.querySelector(".edit-options");
+        const footer = comentario.querySelector('footer');
+        editOption.style.display = 'none';
+        footer.style.display = 'block';
+        divEditable.setAttribute("contenteditable",  "false");
+    }
+    ultimoEditBtnClicked = target;
 }

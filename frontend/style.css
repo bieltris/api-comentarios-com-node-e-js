@@ -279,4 +279,10 @@ div[contenteditable='true']:not(#input-texto) {
         width: 90%;
     }
 
+    .overlay-inicial .input-group {
+    width: 90%;
+    box-shadow: 0px 2px 14px 0px black;
+    border-radius: 5px;
+}
+
 }
