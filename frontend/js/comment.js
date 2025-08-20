@@ -47,9 +47,7 @@ export function carregarComentarios(videoId) {
 
                 const commentElement = criarComentarioElementHtml(comentario);
                 const form = criarFormularioReposta();
-                const editOptions = commentBuild.criarDivOptions();
 
-                commentElement.appendChild(editOptions);
                 commentElement.appendChild(form);
                 commentsContainer.appendChild(commentElement);
             });
@@ -89,6 +87,9 @@ function criarComentarioElementHtml(comentario) {
     divText.textContent = comentario.texto;
     divText.setAttribute('contenteditable', 'false');
     commentElement.appendChild(divText);
+
+    const editOptions = commentBuild.criarDivOptions();
+    commentElement.appendChild(editOptions);
 
     const footer = commentBuild.criarFooterComentario();
     commentElement.appendChild(footer);
@@ -199,7 +200,9 @@ export function toggleReplyForm(button) {
     const isVisible = form.style.display === 'block';
 
     AllForms.forEach(form => {
+        const editOptions = form.closest('.comment').querySelector('.edit-options');
         form.style.display = 'none';
+        if (editOptions.style.display === 'flex') return;
         form.closest('.comment').querySelector("footer").style.display = 'block'
     });
 
@@ -265,20 +268,57 @@ export function toggleEditDiv(target) {
     const divEditable = comentario.querySelector("div[contenteditable]");
     const editOption = comentario.querySelector(".edit-options");
     const footer = comentario.querySelector('footer');
+    const formReply = comentario.querySelector('form');
 
     const isVisible = editOption.style.display === 'flex';
 
     editOption.style.display = isVisible ? 'none' : 'flex';
     footer.style.display = !isVisible ? 'none' : 'block';
     divEditable.setAttribute("contenteditable", isVisible ? "false" : "true");
-    if (ultimoEditBtnClicked) {
+    if (ultimoEditBtnClicked && ultimoEditBtnClicked != target) {
         const comentario = ultimoEditBtnClicked.closest(".comment");
         const divEditable = comentario.querySelector("div[contenteditable]");
         const editOption = comentario.querySelector(".edit-options");
         const footer = comentario.querySelector('footer');
+        const formReply = comentario.querySelector('form');
         editOption.style.display = 'none';
+        divEditable.setAttribute("contenteditable", "false");
+        if (formReply.style.display === 'block') return;
         footer.style.display = 'block';
-        divEditable.setAttribute("contenteditable",  "false");
     }
     ultimoEditBtnClicked = target;
+}
+
+
+export function deleteComentario(target) {
+
+    const comment = target.closest('.comment');
+    const commentId = comment.dataset.commentId;
+
+
+    fetch(`${path}/deleteComment`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(commentId)
+    })
+    .then(async response => {
+        if(!response.ok) {
+                const err = await response.json();
+                throw new Error(`${err.error}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        comment.classList.add('deleting');
+        comment.addEventListener('animationend', (e) => {
+            e.target.style.display = 'none';
+            comment.removeEventListener('animationend');
+        })
+    })
+    .catch(error => {
+        console.error(`Error: ${error}`);
+        const span = criarSpanErro(error);
+        comment.appendChild(span);
+    })
+
 }

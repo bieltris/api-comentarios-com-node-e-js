@@ -29,6 +29,31 @@ img {
     height: 20px;
 }
 
+@keyframes delete-comment {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateX(0);
+        height: auto;
+        margin-bottom: 10px;
+    }
+    80% {
+        opacity: 0.2;
+        transform: scale(0.95) translateX(-30px);
+        height: auto;
+        margin-bottom: 10px;
+    }
+    100% {
+        opacity: 0;
+        height: 0;
+        margin-bottom: 0;
+        padding: 0;
+    }
+}
+
+.comment.deleting {
+    animation: delete-comment 0.5s forwards;
+}
+
 .overlay-inicial {
     position: fixed;
     top: 0;
@@ -273,6 +298,9 @@ div[contenteditable='true']:not(#input-texto) {
     outline: none;
 }
 
+.pop-ups {
+    display: none;
+}
 
 @media (max-width: 768px) {
     .comment-form {
