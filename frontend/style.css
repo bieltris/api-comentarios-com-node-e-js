@@ -36,12 +36,14 @@ img {
         height: auto;
         margin-bottom: 10px;
     }
+
     80% {
         opacity: 0.2;
         transform: scale(0.95) translateX(-30px);
         height: auto;
         margin-bottom: 10px;
     }
+
     100% {
         opacity: 0;
         height: 0;
@@ -279,7 +281,7 @@ div[contenteditable='true']:not(#input-texto) {
 .btn-edit-confirm {
     border-radius: 5px;
     background: #0055c4;
-    border:#0011ff;
+    border: #0011ff;
     padding: 5px;
     color: white;
     font-size: 14px;
@@ -291,7 +293,7 @@ div[contenteditable='true']:not(#input-texto) {
 .btn-cancel-confirm {
     border-radius: 5px;
     background: #cffdff;
-    border:#5df4ff;
+    border: #5df4ff;
     color: #222;
     padding: 5px;
     font-size: 14px;
@@ -302,15 +304,71 @@ div[contenteditable='true']:not(#input-texto) {
     display: none;
 }
 
+.pop-up {
+    position: absolute;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 3px 13px 0px black;
+    background: white;
+}
+
+.pop-up p {
+    margin-bottom: 5px;
+}
+
+.pop-up button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+@keyframes pop-up-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.pop-up.is-open {
+    display: flex;
+    animation: pop-up-in 0.4s ease;
+}
+
+@keyframes pop-up-out {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+}
+
+.pop-up.is-closed {
+    animation: pop-up-out 0.4s ease;
+}
+
 @media (max-width: 768px) {
     .comment-form {
         width: 90%;
     }
 
     .overlay-inicial .input-group {
-    width: 90%;
-    box-shadow: 0px 2px 14px 0px black;
-    border-radius: 5px;
-}
+        width: 90%;
+        box-shadow: 0px 2px 14px 0px black;
+        border-radius: 5px;
+    }
 
 }

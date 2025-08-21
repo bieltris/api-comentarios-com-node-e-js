@@ -1,6 +1,6 @@
 
 import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm, toggleEditDiv, editComment } from './comment.js';
-
+import { togglePopUp } from './popUp.js';
 export let videoId = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (target.closest('.btn-edit-confirm')) {
             editComment(target);
+        }
+
+        if(target.closest('#delete-comment')) {
+            togglePopUp(target);
         }
     });
     document.addEventListener('focusin', (event) => {

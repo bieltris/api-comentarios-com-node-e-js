@@ -23,6 +23,7 @@ export function criarOpcaoDeletar() {
     imgDelete.alt = 'Excluir';
     imgDelete.className = 'delete-comment';
     imgDelete.id = 'delete-comment';
+    imgDelete.dataset.popUpId = 'pop-up-delete-comment';
     return imgDelete;
 }
 
