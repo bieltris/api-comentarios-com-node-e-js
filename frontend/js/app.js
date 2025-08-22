@@ -1,6 +1,6 @@
 
-import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm, toggleEditDiv, editComment } from './comment.js';
-import { togglePopUp } from './popUp.js';
+import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm, toggleEditDiv, editComment, deleteComentario } from './comment.js';
+import { togglePopUp, closePopUp } from './popUp.js';
 export let videoId = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,6 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if(target.closest('#delete-comment')) {
             togglePopUp(target);
+        }
+
+        if(target.closest('.pop-closest')) {
+            closePopUp(target);
+        }
+
+        if(target.closest('.pop-close')) {
+            closePopUp(target);
+        }
+
+        if(target.closest('.delete-confirm-comment')) {
+            deleteComentario(target);
         }
     });
     document.addEventListener('focusin', (event) => {

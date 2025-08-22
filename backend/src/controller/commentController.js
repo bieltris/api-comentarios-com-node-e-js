@@ -1,5 +1,5 @@
 
-import { findCommentsByVideo, buildComment, editCommentInDb } from '../services/commentService.js';
+import { findCommentsByVideo, buildComment, editCommentInDb, deleteCommentById } from '../services/commentService.js';
 
 export function listComments(req, res) {
     const videoId = req.query.videoId;
@@ -36,8 +36,33 @@ export function editComment(req, res) {
 
     const editou = editCommentInDb({ commentId, texto, usuario });
 
-    if(!editou.success) {
+    if (!editou.success) {
         return res.status(401).json({ error: editou.error });
     }
     return res.status(201).json(editou);
+}
+
+export function deleteComment(req, res) {
+    const { usuario } = req.body;
+    const { id } = req.params;
+    const commentId = parseInt(id);
+
+    if (!commentId) {
+        return res.status(400).json({ error: "Comment ID is invalid." });
+    }
+
+    const result = deleteCommentById({ commentId, usuario });
+
+    if (result.success) {
+        return res.status(200).json({ message: "Comentario apagado com sucesso" });
+    } else {
+        if (result.error.includes("permissão")) {
+            return res.status(403).json({ error: result.error });
+        }
+        if (result.error.includes("encontrado")) {
+            return res.status(404).json({ error: result.error });
+        }
+
+        return res.status(500).json({ error: result.error });
+    }
 }
