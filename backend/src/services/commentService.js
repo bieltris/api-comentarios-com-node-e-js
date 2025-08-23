@@ -1,6 +1,6 @@
 
 
-const db = {
+export const db = {
     comments: [
         {
             id: 1, videoId: 1, usuario: "Arakaki", texto: "Muito bom o vídeo, aprendi bastante!", respostas: [
@@ -38,7 +38,7 @@ export function editCommentInDb(dataComentario) {
     if (!comentario) {
         return { success: false, error: "Comentário não encontrado." };
     }
-    
+
     if (dataComentario.usuario !== comentario.usuario) {
         return { success: false, error: "Você não tem permissão para editar este comentário." };
     }
@@ -48,4 +48,25 @@ export function editCommentInDb(dataComentario) {
     console.log("Comentário atualizado no 'DB':", comentario);
 
     return { success: true, data: comentario };
+}
+
+export function deleteCommentById(dataComentario) {
+    const { commentId, usuario } = dataComentario;
+
+    const commentIndex = db.comments.findIndex(comment => comment.id === commentId);
+
+    if (commentIndex === -1) {
+        return { success: false, error: "Comentário não encontrado." };
+    }
+
+    const comentario = db.comments[commentIndex];
+
+    if (usuario !== comentario.usuario) {
+        return { success: false, error: "Você não tem permissão para deletar este comentário." };
+    }
+
+    db.comments.splice(commentIndex, 1);
+
+    return { success: true };
+
 }

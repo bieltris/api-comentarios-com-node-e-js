@@ -32,14 +32,14 @@ img {
 @keyframes delete-comment {
     0% {
         opacity: 1;
-        transform: scale(1) translateX(0);
+        transform: scale(1);
         height: auto;
         margin-bottom: 10px;
     }
 
     80% {
         opacity: 0.2;
-        transform: scale(0.95) translateX(-30px);
+        transform: scale(0.95);
         height: auto;
         margin-bottom: 10px;
     }

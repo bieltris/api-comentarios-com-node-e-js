@@ -1,14 +1,19 @@
 
 const popUpsAbertos = [];
+export let lastDeleteCommentClicked = null;
 
 export function togglePopUp(target) {
     const popUpId = target.dataset.popUpId;
+
+    if(target.classList.contains('delete-comment')) {
+        lastDeleteCommentClicked = target;
+    }
 
     if (!popUpsAbertos.includes(popUpId)) {
         openPopUp(target, popUpId);
         popUpsAbertos.push(popUpId);
     } else {
-        closePopUp(popUpId);
+        closePopUp(target);
         popUpsAbertos
     }
 }
@@ -53,7 +58,11 @@ function openPopUp(btn, popUpId) {
     popUp.classList.add('is-open');
 }
 
-function closePopUp(popUpId) {
+export function closePopUp(target) {
+    let popUpId = target.dataset.popUpId;
+    if(!popUpId) {
+        popUpId = target.closest('.pop-up').id;
+    }
     const popUp = document.getElementById(popUpId);
     if (!popUp) {
         console.error(`Elemento do pop-up com ID "${popUpId}" não foi encontrado.`);

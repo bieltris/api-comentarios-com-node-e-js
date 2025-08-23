@@ -1,5 +1,6 @@
 import { criarSpanErro, fraseDeErroVermelha } from './errorHandle.js';
 import * as commentBuild from './commentBuild.js';
+import { lastDeleteCommentClicked, closePopUp } from './popUp.js';
 
 const path = 'http://localhost:3000/api';
 const commentsContainer = document.getElementById('comments-list-container');
@@ -236,8 +237,8 @@ export function editComment(button) {
 
     console.log(novoTexto);
 
-    fetch(`${path}/editComment`, {
-        method: 'POST',
+    fetch(`${path}/comments`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(novoTexto),
     })
@@ -290,16 +291,20 @@ export function toggleEditDiv(target) {
 }
 
 
-export function deleteComentario(target) {
+export function deleteComentario() {
 
-    const comment = target.closest('.comment');
+    const btnDeleteCommentClicked = lastDeleteCommentClicked;
+    const comment = btnDeleteCommentClicked.closest('.comment');
     const commentId = comment.dataset.commentId;
+    const usuario = document.getElementById('input-usuario');
+    const dataComentario = {
+        usuario: usuario.value,
+    }
 
-
-    fetch(`${path}/deleteComment`, {
+    fetch(`${path}/comments/${commentId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(commentId)
+        body: JSON.stringify(dataComentario)
     })
     .then(async response => {
         if(!response.ok) {
@@ -310,10 +315,12 @@ export function deleteComentario(target) {
     })
     .then(data => {
         comment.classList.add('deleting');
-        comment.addEventListener('animationend', (e) => {
+        comment.addEventListener('animationend', function animartionRemoveComment(e) {
             e.target.style.display = 'none';
-            comment.removeEventListener('animationend');
+            comment.removeEventListener('animationend', animartionRemoveComment);
         })
+        const btnClosePop = document.querySelector('.pop-close');
+        closePopUp(btnClosePop);
     })
     .catch(error => {
         console.error(`Error: ${error}`);
