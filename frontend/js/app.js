@@ -6,6 +6,15 @@ export let videoId = 1;
 document.addEventListener('DOMContentLoaded', () => {
 
     const overlayInicial = document.querySelector('.overlay-inicial');
+
+    overlayInicial.addEventListener('click', function logarNomeUsuario() {
+        const inputNome = overlayInicial.querySelector('#input-usuario');
+        if (!inputNome.value) return;
+        overlayInicial.style.display = 'none';
+        carregarComentarios(1);
+        removeEventListener('click', logarNomeUsuario);
+    })
+
     const path = 'http://localhost:3000/api'
 
     document.addEventListener('click', (event) => {

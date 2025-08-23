@@ -2,7 +2,7 @@ import { criarSpanErro, fraseDeErroVermelha } from './errorHandle.js';
 import * as commentBuild from './commentBuild.js';
 import { lastDeleteCommentClicked, closePopUp } from './popUp.js';
 
-const path = 'http://localhost:3000/api';
+const path = 'http://localhost:8080/api';
 const commentsContainer = document.getElementById('comments-list-container');
 export const pathImg = '../images';
 
