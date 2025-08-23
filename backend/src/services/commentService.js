@@ -19,15 +19,31 @@ export function findCommentsByVideo(videoId) {
 
 export function buildComment(commentData) {
     console.log(`Service: Creating new comment.`);
-    const newComment = {
-        id: Date.now(),
-        videoId: parseInt(commentData.videoId),
-        usuario: commentData.user,
-        texto: commentData.text,
-        respostas: []
-    };
-    db.comments.push(newComment);
-    return newComment;
+    let newItem = null;
+    commentData.type === 'comment' ?
+        newItem = {
+            id: Date.now(),
+            videoId: parseInt(commentData.videoId),
+            usuario: commentData.user,
+            texto: commentData.text,
+            respostas: []
+        }
+        :
+        newItem = {
+            id: Date.now(),
+            commentId: parseInt(commentData.id),
+            usuario: commentData.user,
+            texto: commentData.text,
+        }
+
+        if(commentData.type === 'comment'){
+            db.comments.push(newItem);
+        } else {
+            const comentario = db.comments.find(comment => comment.id === commentData.id);
+            comentario.respostas.push(newItem);
+        }
+            
+    return newItem;
 }
 
 

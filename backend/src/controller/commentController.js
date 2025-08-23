@@ -14,13 +14,14 @@ export function listComments(req, res) {
 }
 
 export function createComment(req, res) {
-    const { videoId, user, text } = req.body;
+    const { id } = req.params;
+    const { videoId, user, text, type } = req.body;
 
-    if (!videoId || !user || !text) {
+    if (!videoId || !user || !text || !type) {
         return res.status(400).json({ error: "Preencha todos os campos, nome e comentario." });
     }
 
-    const newComment = buildComment({ videoId, user, text });
+    const newComment = buildComment({ id, videoId, user, text, type });
 
     res.status(201).json(newComment);
 }

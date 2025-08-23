@@ -1,6 +1,7 @@
 
 import { setupDivEditables, carregarComentarios, enviarComentario, toggleReplyForm, toggleEditDiv, editComment, deleteComentario } from './comment.js';
 import { togglePopUp, closePopUp } from './popUp.js';
+import { postReply } from './replys/reply.js';
 export let videoId = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarComentarios(1);
         removeEventListener('click', logarNomeUsuario);
     })
-
-    const path = 'http://localhost:3000/api'
 
     document.addEventListener('click', (event) => {
         const target = event.target;
@@ -47,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if(target.closest('.delete-confirm-comment')) {
             deleteComentario(target);
         }
+
+        if(target.closest('.btn-reply')) {
+            enviarComentario(target);
+        }
     });
     document.addEventListener('focusin', (event) => {
         const target = event.target;
@@ -68,5 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form-novo-comentario');
     form.addEventListener('submit', (event) => enviarComentario(event, videoId));
     carregarComentarios(videoId);
+    const formsReply = document.querySelectorAll('.reply-form');
+    formsReply.forEach(form => {
+        form.addEventListener('submit', (event) => enviarComentario(event, videoId));
+    });
 
 });

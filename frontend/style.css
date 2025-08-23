@@ -56,6 +56,10 @@ img {
     animation: delete-comment 0.5s forwards;
 }
 
+.comment .reply {
+    padding-left: 20px;
+}
+
 .overlay-inicial {
     position: fixed;
     top: 0;

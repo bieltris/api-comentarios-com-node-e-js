@@ -5,7 +5,7 @@ import { listComments, createComment, editComment, deleteComment } from '../cont
 
 router.get('/', listComments);
 
-router.post('/', createComment);
+router.post('/:id', createComment);
 
 router.put('/', editComment)
 

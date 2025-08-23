@@ -46,9 +46,13 @@ export function carregarComentarios(videoId) {
 
             comentarios.forEach(comentario => {
 
-                const commentElement = criarComentarioElementHtml(comentario);
+                const commentElement = criarComentarioElementHtml(comentario, 'comment');
                 const form = criarFormularioReposta();
+                const respostas = criarRespostas(comentario);
 
+                for (let resposta of respostas) {
+                    commentElement.appendChild(resposta);
+                }
                 commentElement.appendChild(form);
                 commentsContainer.appendChild(commentElement);
             });
@@ -59,10 +63,10 @@ export function carregarComentarios(videoId) {
         });
 }
 
-function criarComentarioElementHtml(comentario) {
+function criarComentarioElementHtml(comentario, tipo) {
     const usuarioNome = document.getElementById('input-usuario');
     const commentElement = document.createElement('div');
-    commentElement.className = 'comment';
+    commentElement.className = tipo;
     commentElement.dataset.commentId = comentario.id;
 
     const head = document.createElement('header');
@@ -111,6 +115,13 @@ function criarFormularioReposta() {
     const divEditable = commentBuild.criarDivEditable();
     div.appendChild(divEditable);
 
+    const inputHidden = document.createElement('input');
+    inputHidden.type = 'hidden';
+    inputHidden.id = 'input-comentario';
+    inputHidden.value = "";
+    div.appendChild(inputHidden);
+
+
     const replyActions = document.createElement('div');
     replyActions.className = 'reply-actions';
     div.appendChild(replyActions);
@@ -125,7 +136,16 @@ function criarFormularioReposta() {
     return form;
 }
 
+export function criarRespostas(comentario) {
+    if (!comentario.respostas) return;
+    const respostas = [];
+    comentario.respostas.forEach(resposta => {
+        const replyElement = criarComentarioElementHtml(resposta, 'reply');
+        respostas.push(replyElement);
+    });
 
+    return respostas;
+};
 
 export function enviarComentario(event, videoId) {
     event.preventDefault();
@@ -141,10 +161,14 @@ export function enviarComentario(event, videoId) {
         textoHiddenInput.value = divEditable.innerHTML;
     }
 
+    const tipo = form.classList.contains('.comment-form') ? 'comment' : 'reply';
+    const commentId = form.closest('.comment').dataset.commentId;
+
     const novoComentario = {
         videoId: videoId,
         user: usuarioInput.value,
-        text: textoHiddenInput.value
+        text: textoHiddenInput.value,
+        tipy: tipo
     };
 
     if (!novoComentario.user.trim() || !novoComentario.text.trim()) {
@@ -152,7 +176,7 @@ export function enviarComentario(event, videoId) {
         return;
     }
 
-    fetch(`${path}/comments`, {
+    fetch(`${path}/comments/${commentId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(novoComentario),
@@ -306,26 +330,26 @@ export function deleteComentario() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataComentario)
     })
-    .then(async response => {
-        if(!response.ok) {
+        .then(async response => {
+            if (!response.ok) {
                 const err = await response.json();
                 throw new Error(`${err.error}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        comment.classList.add('deleting');
-        comment.addEventListener('animationend', function animartionRemoveComment(e) {
-            e.target.style.display = 'none';
-            comment.removeEventListener('animationend', animartionRemoveComment);
+            }
+            return response.json();
         })
-        const btnClosePop = document.querySelector('.pop-close');
-        closePopUp(btnClosePop);
-    })
-    .catch(error => {
-        console.error(`Error: ${error}`);
-        const span = criarSpanErro(error);
-        comment.appendChild(span);
-    })
+        .then(data => {
+            comment.classList.add('deleting');
+            comment.addEventListener('animationend', function animartionRemoveComment(e) {
+                e.target.style.display = 'none';
+                comment.removeEventListener('animationend', animartionRemoveComment);
+            })
+            const btnClosePop = document.querySelector('.pop-close');
+            closePopUp(btnClosePop);
+        })
+        .catch(error => {
+            console.error(`Error: ${error}`);
+            const span = criarSpanErro(error);
+            comment.appendChild(span);
+        })
 
 }
